@@ -154,6 +154,7 @@
 
 <script setup lang="ts">
 import { addTicket } from '@/api/serviceApi'
+import getAuth from '@/helpers/getAuth'
 import { reactive, ref } from 'vue'
 
 type CodeItem = { id: number; value: string; isEditing?: boolean; editValue?: string }
@@ -261,12 +262,18 @@ function validateAll() {
 
 function onSubmit() {
   if (!validateAll()) return
+  const authUser = getAuth()
+  if (!authUser) {
+    alert('Nie znaleziono danych uwierzytelniających. Zaloguj się ponownie.')
+    return
+  }
   const payload = {
     clinetId: 1,
     url: form.url.trim(),
     viewers: form.viewers ?? 0,
     description: form.description.trim(),
     codes: form.codes.map((c) => c.value),
+    username: authUser,
   }
   // TODO: Wyślij payload do API
   console.log('Ticket payload', payload)

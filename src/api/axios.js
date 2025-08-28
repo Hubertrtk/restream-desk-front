@@ -5,18 +5,6 @@ const getBaseURL = () => {
   return 'http://10.0.11.208/restreamdesk'
 }
 
-const getAuth = () => {
-  let auth = localStorage.getItem('wtauthuser')
-  const { userName, password } = JSON.parse(auth)
-  if (userName && password) {
-    const raw = `${userName}:${password}`
-    const encoded = btoa(raw) // base64 encode
-    return `Basic ${encoded}`
-  }
-
-  return null
-}
-
 const api = axios.create({
   baseURL: getBaseURL(),
   headers: {
@@ -25,17 +13,17 @@ const api = axios.create({
 })
 
 // Interceptor do dynamicznego ustawiania baseURL przed każdym requestem
-api.interceptors.request.use((config) => {
-  config.baseURL = getBaseURL()
+// api.interceptors.request.use((config) => {
+//   config.baseURL = getBaseURL()
 
-  // Dodanie nagłówka Authorization do każdego requestu, jeśli dane uwierzytelniające są w localStorage
-  const auth = getAuth()
-  if (auth) {
-    config.headers['Authorization'] = auth
-  }
+//   // Dodanie nagłówka Authorization do każdego requestu, jeśli dane uwierzytelniające są w localStorage
+//   const auth = getAuth()
+//   if (auth) {
+//     config.headers['Authorization'] = auth
+//   }
 
-  return config
-})
+//   return config
+// })
 
 api.interceptors.response.use(
   function (response) {

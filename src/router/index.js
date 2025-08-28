@@ -1,4 +1,7 @@
 import CreateTicket from '@/views/CreateTicket.vue'
+import Groups from '@/views/Groups.vue'
+import Login from '@/views/Login.vue'
+import MyProfile from '@/views/MyProfile.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
@@ -8,6 +11,21 @@ const router = createRouter({
       path: '/createticket',
       name: 'createticket',
       component: CreateTicket,
+    },
+    {
+      path: '/groups',
+      name: 'groups',
+      component: Groups,
+    },
+    {
+      path: '/myprofile',
+      name: 'myprofile',
+      component: MyProfile,
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: Login,
     },
   ],
 })
