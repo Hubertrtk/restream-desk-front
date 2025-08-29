@@ -31,6 +31,9 @@
                     <span class="label">Widzowie:</span> {{ ticket.viewers }}
                   </div>
                   <div class="ticket__row">
+                    <span class="label">Utworzone przez:</span> {{ ticket.createdBy }}
+                  </div>
+                  <div class="ticket__row">
                     <span class="label">Opis:</span> {{ ticket.description }}
                   </div>
                   <div class="ticket__row">

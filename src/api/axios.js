@@ -2,7 +2,7 @@ import axios from 'axios'
 
 const getBaseURL = () => {
   //   return 'https://waftool-plc-01-b6f8g8e2fffwfjfp.polandcentral-01.azurewebsites.net'
-  return 'http://10.0.11.208/restreamdesk'
+  return 'http://localhost:80'
 }
 
 const api = axios.create({
@@ -10,6 +10,7 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true,
 })
 
 // Interceptor do dynamicznego ustawiania baseURL przed każdym requestem

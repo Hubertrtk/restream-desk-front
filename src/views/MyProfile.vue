@@ -2,7 +2,7 @@
   <section class="page">
     <div class="card">
       <header class="card__header">
-        <h1>Moje tickety</h1>
+        <h1>Moje zgłoszenia</h1>
         <p class="subtitle">Lista zgłoszeń zalogowanego użytkownika.</p>
       </header>
 
@@ -57,7 +57,7 @@
 </template>
 
 <script setup lang="ts">
-import { getTicketsByCreatedBy } from '@/api/serviceApi'
+import { getUserTickets } from '@/api/serviceApi'
 import getAuth from '@/helpers/getAuth'
 import { reactive, ref, onMounted } from 'vue'
 
@@ -81,7 +81,7 @@ const loading = ref(true)
 async function fetchTickets() {
   try {
     const auth = getAuth()
-    const res = await getTicketsByCreatedBy(auth)
+    const res = await getUserTickets()
     tickets.splice(
       0,
       tickets.length,

@@ -38,6 +38,7 @@
 </template>
 
 <script setup lang="ts">
+import { login } from '@/api/serviceApi'
 import { ref } from 'vue'
 
 const userName = ref('')
@@ -45,12 +46,19 @@ const password = ref('')
 
 function onSubmit() {
   const payload = {
-    userName: userName.value,
+    email: userName.value,
     password: password.value,
   }
-  localStorage.setItem('rdauthuser', JSON.stringify(payload))
-  userName.value = ''
-  password.value = ''
+  //   localStorage.setItem('rdauthuser', JSON.stringify(payload))
+  //   userName.value = ''
+  //   password.value = ''
+  login(payload)
+    .then((res) => {
+      console.log('res', res)
+    })
+    .catch((err) => {
+      console.error('err', err)
+    })
 }
 </script>
 
