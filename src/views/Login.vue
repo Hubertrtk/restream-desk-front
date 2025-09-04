@@ -39,10 +39,13 @@
 
 <script setup lang="ts">
 import { login } from '@/api/serviceApi'
+import buildSessionString from '@/helpers/buildSessionCookie'
+import { useAuthStore } from '@/stores/auth'
 import { ref } from 'vue'
 
 const userName = ref('')
 const password = ref('')
+const authStore = useAuthStore()
 
 function onSubmit() {
   const payload = {
@@ -54,10 +57,16 @@ function onSubmit() {
   //   password.value = ''
   login(payload)
     .then((res) => {
-      console.log('res', res)
+      console.log(res.data)
+      if (res.data.session) {
+        authStore.setSessionId(buildSessionString(res.data.session))
+      } else {
+        // alert('Błędny login lub hasło')
+      }
     })
     .catch((err) => {
       console.error('err', err)
+      //   alert('Błędny login lub hasło')
     })
 }
 </script>

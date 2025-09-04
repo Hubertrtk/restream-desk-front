@@ -10,18 +10,22 @@
       <div v-else>
         <ul class="groups">
           <li v-for="group in groups" :key="group.groupId" class="group">
-            <button class="group__header" @click="toggleGroup(group)">
-              <div class="group__info">
-                <span class="url">{{ group.url }}</span>
-                <span class="status" :class="group.status">{{ group.status }}</span>
-              </div>
-              <div class="group__meta">
-                <span v-if="group.status === 'closed'">
-                  Zamknięto: {{ formatDate(group.closeTs) }}
-                </span>
-                <span v-else>Aktywna</span>
-              </div>
-            </button>
+            <div class="group__header-container">
+              <button class="group__header" @click="toggleGroup(group)">
+                <div class="group__info">
+                  <span class="url">{{ group.url }}</span>
+                  <span class="status" :class="group.status">{{ group.status }}</span>
+                </div>
+                <div class="group__meta">
+                  <span v-if="group.status === 'closed'">
+                    Zamknięto: {{ formatDate(group.closeTs) }}
+                  </span>
+                  <span v-else>Aktywna</span>
+                </div>
+              </button>
+
+              <button class="close-btn" @click="closeGroup(group.url)">Close Group</button>
+            </div>
 
             <transition name="expand">
               <ul v-if="openGroups[group.groupId]" class="tickets">
@@ -56,8 +60,8 @@
 </template>
 
 <script setup lang="ts">
-import { getGroups, getGroupTickets } from '@/api/serviceApi'
-import { reactive, ref, onMounted, watch } from 'vue'
+import { closeTicketsGroup, getGroups, getGroupTickets } from '@/api/serviceApi'
+import { reactive, ref, onMounted } from 'vue'
 
 type Group = {
   url: string
@@ -89,8 +93,6 @@ async function toggleGroup(group: Group) {
   if (openGroups[group.groupId] && !group.tickets) {
     group.loadingTickets = true
     try {
-      console.log('group')
-      console.log(group)
       const res = await getGroupTickets(group.groupId)
       group.tickets = res.data
     } catch (e) {
@@ -99,6 +101,17 @@ async function toggleGroup(group: Group) {
       group.loadingTickets = false
     }
   }
+}
+
+function closeGroup(url: Group) {
+  console.log(url)
+  closeTicketsGroup({ url })
+    .then((r) => {
+      console.log(r)
+    })
+    .catch((e) => {
+      console.error(e)
+    })
 }
 
 function formatDate(ts?: string) {
@@ -158,17 +171,43 @@ h1 {
   background: #0f172a;
 }
 
+.group__header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .group__header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
+  flex: 1;
   background: none;
   border: none;
   color: inherit;
   text-align: left;
   padding: 14px 16px;
   cursor: pointer;
+}
+
+.close-btn {
+  margin-right: 10px;
+  background: rgba(248, 113, 113, 0.1);
+  border: 1px solid rgba(248, 113, 113, 0.4);
+  color: #f87171;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.close-btn:hover {
+  background: rgba(248, 113, 113, 0.25);
+  transform: scale(1.05);
+}
+.close-btn:active {
+  transform: scale(0.95);
 }
 
 .group__info {
@@ -250,15 +289,35 @@ h1 {
   overflow: hidden;
 }
 
+.close-btn {
+  margin-right: 10px;
+  background: rgba(248, 113, 113, 0.1);
+  border: 1px solid rgba(248, 113, 113, 0.4);
+  color: #f87171;
+  border-radius: 999px;
+  padding: 6px 14px; /* nieco szersze, żeby tekst się dobrze mieścił */
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.close-btn:hover {
+  background: rgba(248, 113, 113, 0.25);
+  transform: scale(1.05);
+}
+.close-btn:active {
+  transform: scale(0.95);
+}
+
 /* Responsive */
 @media (max-width: 720px) {
-  .group__header {
+  .group__header-container {
     flex-direction: column;
-    align-items: flex-start;
-    gap: 6px;
+    align-items: stretch;
   }
-  .group__meta {
+  .close-btn {
     align-self: flex-end;
+    margin: 6px 12px;
   }
 }
 </style>

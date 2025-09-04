@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { useAuthStore } from '@/stores/auth'
 
 const getBaseURL = () => {
   //   return 'https://waftool-plc-01-b6f8g8e2fffwfjfp.polandcentral-01.azurewebsites.net'
@@ -10,32 +11,32 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  withCredentials: true,
 })
 
-// Interceptor do dynamicznego ustawiania baseURL przed każdym requestem
-// api.interceptors.request.use((config) => {
-//   config.baseURL = getBaseURL()
+// Interceptor requestu
+api.interceptors.request.use((config) => {
+  const sessionStore = useAuthStore()
 
-//   // Dodanie nagłówka Authorization do każdego requestu, jeśli dane uwierzytelniające są w localStorage
-//   const auth = getAuth()
-//   if (auth) {
-//     config.headers['Authorization'] = auth
-//   }
+  if (sessionStore.sessionId) {
+    console.log('sessionStore.sessionId')
+    console.log(sessionStore.sessionId)
+    if (config.method) {
+      config.data = {
+        ...(config.data || {}),
+        _sessid: sessionStore.sessionId,
+      }
+    }
 
-//   return config
-// })
+    // 👉 alternatywnie do nagłówka
+    // config.headers['X-Session-Id'] = sessionStore.sessionId
+  }
+
+  return config
+})
 
 api.interceptors.response.use(
-  function (response) {
-    return response.data
-  },
-  function (error) {
-    if (error) {
-      return Promise.reject(error)
-    }
-    return Promise.reject(error)
-  },
+  (response) => response.data,
+  (error) => Promise.reject(error),
 )
 
 export default api

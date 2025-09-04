@@ -5,7 +5,7 @@ export const addTicket = (data) => {
 }
 
 export const getGroups = () => {
-  return axiosInstance.get(`/restreamdesk/getGroups`)
+  return axiosInstance.post(`/restreamdesk/getGroups`)
 }
 
 export const getGroupTickets = (groupId) => {
@@ -17,11 +17,15 @@ export const getTicketsByCreatedBy = (createdBy) => {
 }
 
 export const getUserTickets = () => {
-  return axiosInstance.get(`/restreamdesk/getUserTickets`)
+  return axiosInstance.post(`/restreamdesk/getUserTickets`)
+}
+
+export const closeTicketsGroup = ({ url }) => {
+  return axiosInstance.post(`/restreamdesk/closeUrl`, { url })
 }
 
 export const login = ({ email, password }) => {
-  return axiosInstance.post(`/backoffice/login`, {
+  return axiosInstance.post(`/users/login?_lh=P493zNAohB87nrwT`, {
     email,
     password,
     _nosr: 1,

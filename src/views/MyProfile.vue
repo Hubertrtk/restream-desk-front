@@ -9,8 +9,9 @@
       <div v-if="loading" class="loading">Ładowanie…</div>
       <div v-else>
         <ul class="tickets">
-          <li v-for="ticket in tickets" :key="ticket.id" class="ticket">
+          <li v-for="ticket in tickets" :key="ticket.id" class="ticket" :class="ticket.status">
             <div class="ticket__row"><span class="label">URL:</span> {{ ticket.url }}</div>
+            <div class="ticket__row"><span class="label">Status:</span> {{ ticket.status }}</div>
             <div class="ticket__row">
               <span class="label">Utworzono:</span> {{ formatDate(ticket._created) }}
             </div>
@@ -58,7 +59,6 @@
 
 <script setup lang="ts">
 import { getUserTickets } from '@/api/serviceApi'
-import getAuth from '@/helpers/getAuth'
 import { reactive, ref, onMounted } from 'vue'
 
 type Ticket = {
@@ -68,6 +68,7 @@ type Ticket = {
   description: string
   codes: string[]
   viewers: number
+  status: string
   // Edycja
   editDescription: string
   editCodes: string[]
@@ -80,7 +81,6 @@ const loading = ref(true)
 
 async function fetchTickets() {
   try {
-    const auth = getAuth()
     const res = await getUserTickets()
     tickets.splice(
       0,
@@ -88,6 +88,7 @@ async function fetchTickets() {
       ...res.data.map((t: any) => ({
         id: t.id,
         url: t.url,
+        status: t.status,
         _created: t._created,
         description: t.description,
         codes: t.codes,
@@ -296,5 +297,14 @@ input:focus {
   .ticket {
     padding: 12px;
   }
+}
+
+.ticket.open {
+  border-left: 4px solid #34d399; /* zielony pasek */
+}
+
+.ticket.closed {
+  border-left: 4px solid #f87171; /* czerwony pasek */
+  opacity: 0.7;
 }
 </style>
