@@ -150,12 +150,14 @@
       </footer>
     </div>
   </section>
+  <SendImage />
 </template>
 
 <script setup lang="ts">
 import { addTicket } from '@/api/serviceApi'
 import getAuth from '@/helpers/getAuth'
 import { reactive, ref } from 'vue'
+import SendImage from '@/components/sendImage/SendImage.vue'
 
 type CodeItem = { id: number; value: string; isEditing?: boolean; editValue?: string }
 

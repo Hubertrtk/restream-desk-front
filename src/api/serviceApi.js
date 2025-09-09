@@ -34,3 +34,11 @@ export const login = ({ email, password }) => {
     // ,   "_devm":1
   })
 }
+
+export const sendTicketImages = (formData) => {
+  return axiosInstance.post(`/restreamdesk/photo`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  })
+}
